@@ -2,17 +2,28 @@ import React, {useContext, useEffect} from 'react'
 import {Movie} from '../Movie'
 import MovieItem from './MovieItem'
 
-let url = 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=terminator&key=AIzaSyAng_pu_QRLCzBZsA8iRbU8lwchZWRaKTM'
+let number = '&maxResults=10'
+
+
 
 const MovieList = () => {
   let  {movie, setMovie, mySearch, setMySearch, select, setSelect} = useContext(Movie)
   useEffect(() => {
      let getMyMovie = async () => {
-      let response = await fetch(url);
+      let storedData =localStorage.getItem('mike');
+      if (storedData){
+        setMovie(JSON.parse(storedData))
+        console.log(storedData)
+      }else{
+      let response = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${mySearch}&key=${process.env.REACT_APP_API_KEY}${number}`);
       let data = await response.json();
-      console.log(data.items)
-      setMovie(data.items)
+       localStorage.setItem('mike', JSON.stringify(data.items));
+      
+    
 
+      // console.log(data.items)
+      // setMovie(data.items)
+    }
     }
 
     getMyMovie()
